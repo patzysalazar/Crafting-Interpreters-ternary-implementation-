@@ -63,7 +63,7 @@ class Scanner {
       case ')': addToken(RIGHT_PAREN); break;
       case '{': addToken(LEFT_BRACE); break;
       case '}': addToken(RIGHT_BRACE); break;
-      case ',': addToken(COMMA); break;
+      case ',': addToken(COMMA); break;//Scanner already recognizes the commas so no addition to scanner, only parser
       case '.': addToken(DOT); break;
       case '-': addToken(MINUS); break;
       case '+': addToken(PLUS); break;

@@ -47,14 +47,36 @@ class Parser {
   }
 //< Statements and State parse
 //> expression
+//---------------------------------------------------------------------------------------------
   private Expr expression() {
 /* Parsing Expressions expression < Statements and State expression
     return equality();
 */
 //> Statements and State expression
-    return assignment();
+    //return assignment();
+      return comma();//comma → equality ( "," equality )* ; -------> expression → comma ;
+//Starting point lowest precedence under expression(not method), so lowest overall
 //< Statements and State expression
   }
+  private Expr comma(){
+      Expr expr = equality();// gets the first expression
+
+      //checks toke comma if there
+      while (check(COMMA)){//COMMA is Token already taken into consideration, scanner took the character and turned it into a token
+        Token operator = peek();// takes comma and sets as operator
+        advance();// mode forward
+        Expr Rightexpr = equality();//gets the second expression
+          //building the new expression
+        expr = new Expr.Binary(expr, operator,Rightexpr);
+        //expression = left comma right
+          // expression = ((left comma right), right)
+        // loop - each iteration of loop - new complete expression becomes the left side each time after comma
+      }
+      return expr;//left associativity in comma preference - returns the whole expression
+  }
+
+
+//-------------------------------------------------------------------------------------------
 //< expression
 //> Statements and State declaration
   private Stmt declaration() {
@@ -419,8 +441,10 @@ class Parser {
         if (arguments.size() >= 255) {
           error(peek(), "Can't have more than 255 arguments.");
         }
-//< check-max-arity
-        arguments.add(expression());
+        //< check-max-arity
+        arguments.add(equality());
+        //arguments.add(expression());
+
       } while (match(COMMA));
     }
 

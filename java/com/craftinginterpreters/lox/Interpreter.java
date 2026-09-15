@@ -264,6 +264,10 @@ class Interpreter implements Expr.Visitor<Object>,
 //> visit-binary
   @Override
   public Object visitBinaryExpr(Expr.Binary expr) {
+      if (expr.operator.type == TokenType.COMMA){
+          evaluate(expr.left);//ignore left but evaluate
+          return evaluate(expr.right);//evaluate right and return it
+      }
     Object left = evaluate(expr.left);
     Object right = evaluate(expr.right); // [left]
 
