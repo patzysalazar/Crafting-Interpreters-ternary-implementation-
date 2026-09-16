@@ -54,18 +54,19 @@ class Parser {
 */
 //> Statements and State expression
     //return assignment();
-      return comma();//comma → equality ( "," equality )* ; -------> expression → comma ;
+      return assignment();
+      //return comma();//comma → equality ( "," equality )* ; -------> expression → comma ;
 //Starting point lowest precedence under expression(not method), so lowest overall
 //< Statements and State expression
   }
   private Expr comma(){
-      Expr expr = equality();// gets the first expression
+      Expr expr = assignment();// gets the first expression
 
       //checks toke comma if there
       while (check(COMMA)){//COMMA is Token already taken into consideration, scanner took the character and turned it into a token
         Token operator = peek();// takes comma and sets as operator
         advance();// mode forward
-        Expr Rightexpr = equality();//gets the second expression
+        Expr Rightexpr = assignment();//gets the second expression
           //building the new expression
         expr = new Expr.Binary(expr, operator,Rightexpr);
         //expression = left comma right
@@ -315,7 +316,8 @@ class Parser {
     Expr expr = equality();
 */
 //> Control Flow or-in-assignment
-    Expr expr = or();
+    //Expr expr = or();
+    Expr expr = conditional();
 //< Control Flow or-in-assignment
 
     if (match(EQUAL)) {
@@ -337,6 +339,27 @@ class Parser {
 
     return expr;
   }
+
+  //Conditional - between assignment and or
+    //?: if/else inside expression
+    //condition ? value if true: value if false
+    //right associative if nested
+  private Expr conditional(){
+    Expr expr = equality();//gets condition left side
+    if (match(TokenType.QUESTION_MARK)){//Added ? to tokentype and is now a token// is next token a question mark
+    Expr TrueValue = expression();// after the ? and between the next variable
+        if(!check(TokenType.COLON)){//if not colon type error
+            error(peek(), "The ':' is missing");
+        }
+        else{
+            advance();
+        }
+    Expr FalseValue = conditional();//parses expression after :
+    expr = new Expr.Conditional(expr,TrueValue, FalseValue);//object conatains all 3 to then evaluate mathematically in other parts of program
+    }
+    return expr;//condition sent back to parser
+  }
+
 //< Statements and State parse-assignment
 //> Control Flow or
   private Expr or() {

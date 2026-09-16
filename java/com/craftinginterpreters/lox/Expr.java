@@ -17,6 +17,7 @@ abstract class Expr {
     R visitThisExpr(This expr);
     R visitUnaryExpr(Unary expr);
     R visitVariableExpr(Variable expr);
+    R visitConditionalExpr(Conditional expr);
   }
 
   // Nested Expr classes here...
@@ -72,6 +73,20 @@ abstract class Expr {
     final List<Expr> arguments;
   }
 //< expr-call
+  static class Conditional extends Expr{
+    Conditional(Expr condition, Expr trueValue, Expr falseValue){
+        this.condition = condition;
+        this.trueValue = trueValue;
+        this.falseValue = falseValue;
+    }
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+        return visitor.visitConditionalExpr(this);
+    }
+    final Expr condition;
+    final Expr trueValue;
+    final Expr falseValue;
+}
 //> expr-get
   static class Get extends Expr {
     Get(Expr object, Token name) {

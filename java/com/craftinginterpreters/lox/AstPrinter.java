@@ -146,6 +146,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 //> Functions omit
 
   @Override
+  public String visitConditionalExpr(Expr.Conditional expr) {
+      return parenthesize("?", expr.condition, expr.trueValue, expr.falseValue);//inside parenthesis, prints the parts of the conditional, basically the structure
+  }
+
+  @Override
   public String visitCallExpr(Expr.Call expr) {
     return parenthesize2("call", expr.callee, expr.arguments);
   }

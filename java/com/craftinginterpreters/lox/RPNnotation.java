@@ -23,6 +23,11 @@ public class RPNnotation implements Expr.Visitor<String> {
 
     }
     @Override
+    public String visitConditionalExpr(Expr.Conditional express){
+        return print(express.condition) + "? " + print(express.trueValue) + " : " +print(express.falseValue);
+
+    }
+    @Override
     public String visitGroupingExpr(Expr.Grouping express){//grouping by parentheses
         return express.expression.accept(this);//what is inside parenthesis take to RPN visitor
 

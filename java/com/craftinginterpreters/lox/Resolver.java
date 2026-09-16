@@ -227,6 +227,17 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     resolve(expr.right);
     return null;
   }
+
+  //__________________________________________
+  @Override
+  public Void visitConditionalExpr(Expr.Conditional expr) {
+      resolve(expr.condition);//looks at variables and identifies which declaration it refers to
+      resolve(expr.trueValue);
+      resolve(expr.falseValue);
+      return null;
+  }
+  //__________________________________________
+
 //< visit-binary-expr
 //> visit-call-expr
   @Override

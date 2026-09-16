@@ -313,6 +313,8 @@ class Interpreter implements Expr.Visitor<Object>,
           return (String)left + (String)right;
         }
 
+
+
 /* Evaluating Expressions binary-plus < Evaluating Expressions string-wrong-type
         break;
 */
@@ -336,6 +338,20 @@ class Interpreter implements Expr.Visitor<Object>,
     // Unreachable.
     return null;
   }
+
+    @Override//conditional method
+    public Object visitConditionalExpr(Expr.Conditional expr){
+        Object condition = evaluate(expr.condition);//evaluates what the expression produces
+//stored in variable condition
+        if(isTruthy(condition)){//checks if condition is true in lox
+            return evaluate(expr.trueValue);
+
+        }
+        else{
+            return evaluate(expr.falseValue);
+        }
+    }
+
 //< visit-binary
 //> Functions visit-call
   @Override
